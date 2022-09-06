@@ -6,15 +6,13 @@ import re
 
 def fetch(filename):
     # Read pdf into list of DataFrame
-    path = '../../data/'
-
     df_list = tabula.read_pdf(filename , pages='all')
     df= pd.concat(df_list)
     return df
 
 
 def fetch_eg_csv():
-    path = '../../data/'
+    path = 'data/'
     df_list = tabula.read_pdf(path + "TransactionHistory.pdf" , pages='all')
     df= pd.concat(df_list)
     return df
