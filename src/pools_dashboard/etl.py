@@ -12,6 +12,7 @@ def fetch(filename):
 
 
 def fetch_eg_csv():
+    # note that file path starts from pools-dashboard directory
     path = 'data/'
     df_list = tabula.read_pdf(path + "TransactionHistory.pdf" , pages='all')
     df= pd.concat(df_list)
