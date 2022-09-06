@@ -1,13 +1,12 @@
 import streamlit as st
-import etl
-import charts
-import pandas as pd
 
+import charts
+import etl
 
 st.title("Football Bets Dashboard")
 st.markdown('A dashboard to keep track of football bets on SGPools, '
-             'as betting houses provide few tools and only a PDF export '
-            'for your transactions. This one\'s for the hamsters' )
+            'as betting houses provide few tools and only a PDF export '
+            'for your transactions. This one\'s for the hamsters')
 st.sidebar.subheader("Menu")
 
 global df
@@ -25,18 +24,14 @@ def convert_to_df(df_input):
     return df_match2
 
 
-
 option = st.selectbox(
     'Input file',
     ('Sample file', 'Upload my file'))
 
 
-
 def df_to_csv(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode('utf-8')
-
-
 
 
 if option == 'Sample file':
@@ -55,7 +50,7 @@ if option == 'Sample file':
 
 
 elif option == 'Upload my file':
-    uploaded_file = st.file_uploader(label = "Upload SGPools pdf export", type = ["pdf"])
+    uploaded_file = st.file_uploader(label="Upload SGPools pdf export", type=["pdf"])
     if uploaded_file is not None:
         df = etl.fetch(uploaded_file)
         df = convert_to_df(df)
@@ -69,10 +64,6 @@ elif option == 'Upload my file':
 
         fig = charts.scatter_returns(df, 'date', 'returns')
         st.plotly_chart(fig)
-
-
-
-
 
 # main page
 
@@ -91,4 +82,3 @@ elif option == 'Upload my file':
 
 
 # csv = df_to_csv(df)
-

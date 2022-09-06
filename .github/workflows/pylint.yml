@@ -24,6 +24,6 @@ jobs:
     - name: Install dependencies
       run: poetry install
       if: steps.cache.outputs.cache-hit != 'true'
-    - name: Analysing the code with pylint
+    - name: Test with pytest
       run: |
-        pylint $(git ls-files '*.py')
+        python -m poetry run python -m pytest -v tests
