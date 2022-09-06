@@ -6,7 +6,7 @@ import re
 
 def fetch(filename):
     # Read pdf into list of DataFrame
-    path = 'data/'
+    path = '../../data/'
 
     df_list = tabula.read_pdf(filename , pages='all')
     df= pd.concat(df_list)
@@ -14,13 +14,14 @@ def fetch(filename):
 
 
 def fetch_eg_csv():
-    df_list = tabula.read_pdf('data/' + "TransactionHistory.pdf" , pages='all')
+    path = '../../data/'
+    df_list = tabula.read_pdf(path + "TransactionHistory.pdf" , pages='all')
     df= pd.concat(df_list)
     return df
 
 
 def fetch_matches():
-    path = 'data/'
+    path = '../../data/'
     name = 'sportsref_download_'
 
     from os import listdir
