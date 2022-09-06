@@ -1,7 +1,7 @@
-# pools-dashboard
+# pools-analytics
 
 ### Deployed at
-https://galenhew-pools-dashboard-dashboard-iqnue0.streamlitapp.com/
+https://galenhew-pool-analytics-srcpools-dashboarddashboard-3ao0eg.streamlitapp.com/
 
 ### Scope
 1. dashboard for bets 
