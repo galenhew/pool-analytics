@@ -14,7 +14,7 @@ def fetch(filename):
 
 
 def fetch_eg_csv():
-    df_list = tabula.read_pdf('../data/' + "TransactionHistory.pdf" , pages='all')
+    df_list = tabula.read_pdf('data/' + "TransactionHistory.pdf" , pages='all')
     df= pd.concat(df_list)
     return df
 
