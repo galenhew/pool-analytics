@@ -1,3 +1,4 @@
+[![Pylint](https://github.com/galenhew/pool-analytics/actions/workflows/pylint.yml/badge.svg)](https://github.com/galenhew/pool-analytics/actions/workflows/pylint.yml)
 # pools-analytics
 
 ### Deployed at
