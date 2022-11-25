@@ -174,3 +174,26 @@ def return_by_match_table_simple(df):
 
 def return_by_day_table(df):
     return df
+
+
+def open_bets(df):
+    df = df.copy()
+    df = df.loc[(df['type'] == 'Football') | (df['type'] == 'Deposit') | (df['type'] == 'Withdrawal')]
+    df = df.sort_values(by=['datetime'])
+    df = df[df['status_receiptno'] == 'Placed']
+    df = df[['draw_eventdate_time', 'selection_details', 'amount']]
+    # make odds and win column
+    df['odds'] = df[['selection_details']].apply(lambda x: x.str.split('@').str[-1])
+    df['odds'] = pd.to_numeric(df['odds'])
+    df['potential_win'] = df['odds'] * df['amount']
+    # match column
+    df['match'] = df['selection_details'] \
+        .apply(lambda x: re.sub('\\r|\&|\@|\([a-zA-Z]+\)', ' ', x).strip())
+    df['match'] = df['match'].str.split('-').str[1] + df['match'].str.split('-').str[2]
+    df['match'] = df['match'].str.rsplit(' ', 1).str[0]
+    df = df.drop(columns=['selection_details'])
+    # add totals
+    df = df[['draw_eventdate_time', 'match', 'odds', 'amount', 'potential_win']]
+    df['draw_eventdate_time'] = pd.to_datetime(df['draw_eventdate_time']).dt.normalize()
+    return df
+
