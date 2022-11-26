@@ -4,11 +4,10 @@ import charts
 import etl
 import numpy as np
 
-st.title("Football Bets Dashboard")
-st.markdown('A dashboard to keep track of football bets on SGPools, '
-            'as betting houses provide few tools and only a PDF export '
-            'for your transactions. This one\'s for the hamsters')
-st.sidebar.subheader("Menu")
+st.title("SGPools Soccer Bets Tracker")
+st.markdown('No information is stored.'
+            'Step 1: Download "Transaction History" PDF from SGPools app '
+            'Step 2: Upload the PDF here.')
 
 global df
 
@@ -97,14 +96,14 @@ elif option == 'Upload my file':
         total_odds = np.round(np.mean(df_open_bets)['odds'],2)
         total_imp_prob = np.round(1/total_odds,2)
         total_amount = np.round(np.sum(df_open_bets)['amount'],2)
-        total_potential_win = np.round(np.sum(df_open_bets)['potential_win'],2)
+        total_potential_win = np.round(np.sum(df_open_bets)['potential_win'] * total_imp_prob,2)
 
         st.markdown("Mean Odds/ Implied Prob.:")
         st.markdown(total_odds )
         st.markdown(total_imp_prob)
         st.markdown("Total Amount:")
         st.markdown(total_amount)
-        st.markdown("Total Potential Payout:")
+        st.markdown("Total Potential Payout EV:")
         st.markdown(total_potential_win)
 
 # main page
