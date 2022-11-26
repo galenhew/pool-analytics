@@ -5,6 +5,9 @@ def scatter_returns(df, x, y):
     fig = px.scatter(df, x=x, y=y, hover_data=['match_name'], color='imp_prob_weighted',
                      marginal_y='violin',
                      title='Match returns over match day ')
+    fig.update_layout(
+        margin=dict(l=40, r=40, t=60, b=60),
+    )
     return fig
 
 
