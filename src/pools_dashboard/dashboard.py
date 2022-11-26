@@ -3,6 +3,7 @@ import streamlit as st
 import charts
 import etl
 import numpy as np
+from metrics import get_archie_score
 
 st.title("SGPools Soccer Bets Tracker")
 st.write('- No information is stored. \n'
@@ -25,8 +26,7 @@ def df_to_match(df):
         df_wr = etl.win_ratio_table(df)
         # wr= charts.win_ratio(df_wr)
         df_match = etl.return_by_match_table(df_wr)
-        df_match2 = etl.return_by_match_table_simple(df_match)
-    return df_match2
+    return df_match
 
 
 option = st.selectbox(
@@ -39,21 +39,26 @@ def df_to_csv(df):
     return df.to_csv().encode('utf-8')
 
 
-if option == 'Sample file':
-    df = etl.fetch_eg_csv()
+def st_return_chart(df):
     df = convert_to_df(df)
     df_match = df_to_match(df)
-    st.dataframe(df_match)
+    df_match2 = etl.return_by_match_table_simple(df_match)
+    st.dataframe(df_match2)
     download_butt = st.download_button(
         label="Download data as csv",
-        data=df_to_csv(df_match),
+        data=df_to_csv(df_match2),
         file_name='sgpools_cleaned.csv',
         mime='text/csv',
     )
-
-    fig = charts.scatter_returns(df_match, 'date', 'returns')
+    st.header("Historical Metrics")
+    st.subheader("Returns per match")
+    fig = charts.scatter_returns(df_match2, 'date', 'returns')
     st.plotly_chart(fig)
+    st.subheader("Archie Score")
+    return df, df_match, df_match2
 
+
+def st_open_bets(df):
     st.header('Open Bets')
     df_open_bets = etl.open_bets(df)
     st.dataframe(df_open_bets)
@@ -72,55 +77,25 @@ if option == 'Sample file':
     st.markdown(total_potential_win)
 
 
+def st_archie_score(df):
+    archie_score, chance_fluke = get_archie_score(df)
+    st.markdown("Archie Score")
+    st.markdown(archie_score)
+    st.markdown("Chance of Fluke Results")
+    st.markdown(chance_fluke)
+
+
+if option == 'Sample file':
+    df = etl.fetch_eg_csv()
+    df, df_match, df_match2 = st_return_chart(df)
+    st_archie_score(df_match)
+    st_open_bets(df)
+
+
 elif option == 'Upload my file':
     uploaded_file = st.file_uploader(label="Upload SGPools pdf export", type=["pdf"])
     if uploaded_file is not None:
         df = etl.fetch(uploaded_file)
-        df = convert_to_df(df)
-        df_match = df_to_match(df)
-        st.dataframe(df_match)
-        download_butt = st.download_button(
-            label="Download data as csv",
-            data=df_to_csv(df_match),
-            file_name='sgpools_cleaned.csv',
-            mime='text/csv',
-        )
-
-        fig = charts.scatter_returns(df_match, 'date', 'returns')
-        st.plotly_chart(fig)
-
-        st.header('Open Bets')
-        df_open_bets = etl.open_bets(df)
-        st.dataframe(df_open_bets)
-
-        total_odds = np.round(np.mean(df_open_bets)['odds'], 2)
-        total_imp_prob = np.round(1 / total_odds, 2)
-        total_amount = np.round(np.sum(df_open_bets)['amount'], 2)
-        total_potential_win = np.round(np.sum(df_open_bets)['potential_win'], 2)
-        total_potential_win_ev = np.multiply(total_potential_win, total_imp_prob)
-
-        st.markdown("Mean Odds/ Implied Prob.:")
-        st.markdown(total_odds)
-        st.markdown(total_imp_prob)
-        st.markdown("Total Amount:")
-        st.markdown(total_amount)
-        st.markdown("Total Potential Payout EV:")
-        st.markdown(total_potential_win_ev)
-
-# main page
-
-# try:
-#     df = convert_to_df(uploaded_file)
-#     st.dataframe(df)
-# except Exception as e:
-#     print(e)
-#     st.write("please upload file to app")
-
-# try:
-#     st.markdown("Win Ratio")
-#     st.markdown(wr)
-# except Exception as e:
-#     print(e)
-
-
-# csv = df_to_csv(df)
+        df, df_match, df_match2 = st_return_chart(df)
+        st_archie_score(df_match)
+        st_open_bets(df)

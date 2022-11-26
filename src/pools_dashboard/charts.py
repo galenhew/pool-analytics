@@ -2,7 +2,7 @@ import plotly.express as px
 
 
 def scatter_returns(df, x, y):
-    fig = px.scatter(df, x=x, y=y, hover_data=['match_name'],
+    fig = px.scatter(df, x=x, y=y, hover_data=['match_name'], color='imp_prob_weighted',
                      title='Match returns over match day ')
     return fig
 

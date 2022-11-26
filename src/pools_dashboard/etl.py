@@ -143,7 +143,7 @@ def return_by_match_table(df):
     df['match_total_bet'] = df.groupby(['home', 'away', 'datetime'])['amount'].transform(np.sum)
     df['match_total_returns'] = df.groupby(['home', 'away', 'datetime'])['payout_winnings'].transform(np.sum)
     df['bet_per_match'] = df['amount'] / df['match_total_bet']
-    df['imp_prob_weighted'] = df['imp_prob'] * df['bet_per_match']
+    df['imp_prob_weighted'] = np.round(df['imp_prob'] * df['bet_per_match'],2)
     df['date'] = df['datetime'].dt.date
 
     # groupby
@@ -162,13 +162,13 @@ def return_by_match_table(df):
     a = df[['A', 'D', 'H']]
     df = df.assign(side_agg=a.idxmax(axis=1), max_side_bet=a.max(axis=1))
     df['exact_frac_win'] = df['max_side_bet'] * df['agg_win_ind']
-
-    return df.reset_index()
+    df = df.reset_index()
+    df['match_name'] = df['home'] + ' v ' + df['away']
+    return df
 
 
 def return_by_match_table_simple(df):
-    df['match_name'] = df['home'] + ' v ' + df['away']
-    df = df[['match_name', 'date', 'returns']]
+    df = df[['match_name', 'date', 'returns', 'imp_prob_weighted']]
     return df
 
 
