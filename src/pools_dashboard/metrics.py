@@ -33,3 +33,12 @@ def get_archie_score(df_match):
         chance = 0
 
     return archie_score, chance
+
+
+
+def get_num_bets(df_match):
+    df = df_match.copy()
+    every_bet = df['num_of_bets'].sum()
+    num_matches_bet = len(df)
+
+    return every_bet, num_matches_bet

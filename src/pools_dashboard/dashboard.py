@@ -3,7 +3,7 @@ import streamlit as st
 import charts
 import etl
 import numpy as np
-from metrics import get_archie_score
+from metrics import get_archie_score, get_num_bets
 
 st.title("SGPools Soccer Bets Tracker")
 st.write('- No information is stored. \n'
@@ -76,6 +76,13 @@ def st_open_bets(df):
     st.markdown("Total Potential Payout:")
     st.markdown(total_potential_win)
 
+def st_num_bets(df):
+    every_bet, num_matches_bet = get_num_bets(df)
+    st.markdown("Total number of bets made")
+    st.markdown(every_bet)
+    st.markdown("Number of matches bet")
+    st.markdown(num_matches_bet)
+
 
 def st_archie_score(df):
     archie_score, chance_fluke = get_archie_score(df)
@@ -88,6 +95,7 @@ def st_archie_score(df):
 if option == 'Sample file':
     df = etl.fetch_eg_csv()
     df, df_match, df_match2 = st_return_chart(df)
+    st_num_bets(df_match)
     st_archie_score(df_match)
     st_open_bets(df)
 
@@ -97,5 +105,6 @@ elif option == 'Upload my file':
     if uploaded_file is not None:
         df = etl.fetch(uploaded_file)
         df, df_match, df_match2 = st_return_chart(df)
+        st_num_bets(df_match)
         st_archie_score(df_match)
         st_open_bets(df)
